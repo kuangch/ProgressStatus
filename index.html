@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>k-status</title>
+    <link rel="stylesheet" href="k-status.css"/>
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+        .myStatus {
+            position: absolute;
+            background-color: white;
+            border: 2px solid darkgray;
+            border-radius: 10px;
+            width: 200px;
+            height: 150px;
+            top: 50%;
+            left: 50%;
+            margin-top: -75px;
+            margin-left: -100px;
+        }
+
+        .buttons{
+            position: absolute;
+            top:50%;
+            margin-top: -134px;
+            right: 10px;
+        }
+
+        .buttons a{
+            margin-top: 5px;
+            transition: background-color 1s, margin-left 0.3s;
+            display: block;
+            border: 2px solid darkgray;
+            background-color: white;
+            color: grey;
+            text-align: center;
+            width: 80px;
+            height: 35px;
+            line-height: 35px;
+            text-decoration: none;
+        }
+
+        .buttons a:hover{
+            background-color: #337aff;
+            color: white;
+            margin-left: -20px;
+        }
+
+    </style>
+</head>
+<body style="background-color: gainsboro">
+<div id="myStatus" class="myStatus"></div>
+<div class="buttons">
+    <a onclick="changeStatus('loading')" href="javascript:void(0)">加载</a>
+    <a onclick="changeStatus('success')" href="javascript:void(0)">成功</a>
+    <a onclick="changeStatus('error')" href="javascript:void(0)">失败</a>
+    <a onclick="changeStatus('warn')" href="javascript:void(0)">警告</a>
+    <a onclick="changeStatus('hide')" href="javascript:void(0)">隐藏</a>
+    <a onclick="changeStatus('auto')" href="javascript:void(0)">自动</a>
+</div>
+</body>
+<script type="text/javascript" src="k-status.js"></script>
+<script>
+    var timer;
+    var kStatus = KStatus('myStatus');
+    var changeStatus = function(event){
+        try{clearInterval(timer)}catch (exceptioin){}
+        switch (event){
+            case 'loading':
+                kStatus.changeState(kStatus.state.LOADING);
+                break;
+            case 'success':
+                kStatus.changeState(kStatus.state.SUCCESS);
+                break;
+            case 'error':
+                kStatus.changeState(kStatus.state.ERROR);
+                break;
+            case 'warn':
+                kStatus.changeState(kStatus.state.WARN);
+                break;
+            case 'hide':
+                kStatus.changeState(kStatus.state.HIDE);
+                break;
+            case 'auto':
+                kStatus.changeState(kStatus.state.LOADING);
+                var i = 0;
+                timer = setInterval(function () {
+                    kStatus.changeState(i % 4 === 0 ? kStatus.state.SUCCESS : (i % 4 === 1 ? kStatus.state.ERROR : (i % 4 === 2 ? kStatus.state.WARN : kStatus.state.EMPTY)));
+                    i++;
+                }, 2000);
+                break;
+        }
+    };
+    changeStatus('auto');
+</script>
+</html>
